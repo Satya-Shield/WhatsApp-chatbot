@@ -21,13 +21,13 @@ router.post("/", async (req: Request, res: Response) => {
   console.log(`\n\nWebhook received ${timestamp}\n`);
 
   const requestBody = req.body;
-  const messageType = requestBody.value.messages[0].type;
-  console.log(JSON.stringify(requestBody.value.messages[0][messageType].body, null, 2));
+  const messageType = requestBody.entry[0].changes[0].value.messages[0].type;
+  console.log(JSON.stringify(requestBody.entry[0].changes[0].value.messages[0][messageType].body, null, 2));
 
   let satyaRes: any[] = [];
 
   if (messageType === "text") {
-    const textBody = requestBody.value.messages[0][messageType].body;
+    const textBody = requestBody.entry[0].changes[0].value.messages[0][messageType].body;
 
     try {
       const response = await axios.post("https://satyashield-backend-60le.onrender.com/api/run_agent", {
@@ -53,7 +53,7 @@ router.post("/", async (req: Request, res: Response) => {
   const API_VERSION = process.env.WHATSAPP_API_VERSION || "v22.0";
   const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
   const ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
-  const TO_NUMBER = requestBody.value.messages[0].from;
+  const TO_NUMBER = requestBody.entry[0].changes[0].value.messages[0].from;
   const ENABLE_LINK_PREVIEW = true;
 
   const url = `https://graph.facebook.com/${API_VERSION}/${PHONE_NUMBER_ID}/messages`;
