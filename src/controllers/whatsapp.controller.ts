@@ -20,34 +20,34 @@ export const handleWhatsappWebhook = async (req: Request, res: Response) => {
   console.log(`\n\nWebhook received ${timestamp}\n`);
   console.log(JSON.stringify(req.body, null, 2));
 
-  const message = req.body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
-  if (!message) return res.sendStatus(200);
+  res.sendStatus(200);
 
-  let reply = "Sorry, no response available.";
-  if (message.type === "text") {
-    const satyaRes = await runTextCheck(message.text.body);
-    reply = satyaRes.map((item, index) => buildReply(item, index)).join("\n\n");
+  (async () => {
+    const message = req.body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+    if (!message) return;
 
-  }
-  else if (message.type === "image") {
-    const mediaId = message.image.id;
-    let caption = message.image?.caption;
-    if (!caption) caption = "Verify the information";
-    console.log("Received image with ID:", mediaId);
+    let reply = "Sorry, no response available.";
 
-    const meta = await getWhatsappMediaUrl(mediaId);
-    if (meta?.url) {
-      const mediaBuffer = await downloadWhatsappMedia(meta.url);
-      if (mediaBuffer) {
-        const extension = mime.extension(meta.mime_type) || "bin";
-        const fileName = `${mediaId}.${extension}`;
+    if (message.type === "text") {
+      const satyaRes = await runTextCheck(message.text.body);
+      reply = satyaRes.map((item, index) => buildReply(item, index)).join("\n\n");
+    } else if (message.type === "image") {
+      const mediaId = message.image.id;
+      let caption = message.image?.caption || "Verify the information";
+      console.log("Received image with ID:", mediaId);
 
-        const satyaRes = await runImageCheck(mediaBuffer, fileName, meta.mime_type, caption);
-        reply = satyaRes.map((item, index) => buildReply(item, index)).join("\n\n");
+      const meta = await getWhatsappMediaUrl(mediaId);
+      if (meta?.url) {
+        const mediaBuffer = await downloadWhatsappMedia(meta.url);
+        if (mediaBuffer) {
+          const extension = mime.extension(meta.mime_type) || "bin";
+          const fileName = `${mediaId}.${extension}`;
+          const satyaRes = await runImageCheck(mediaBuffer, fileName, meta.mime_type, caption);
+          reply = satyaRes.map((item, index) => buildReply(item, index)).join("\n\n");
+        }
       }
     }
-  }
-  // reply = "Test";
-  await sendWhatsappTextMessage(message.from, reply);
-  return res.sendStatus(200);
+
+    await sendWhatsappTextMessage(message.from, reply);
+  })();
 };
