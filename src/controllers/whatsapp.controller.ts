@@ -18,7 +18,7 @@ export const verifyWhatsappWebhook = (req: Request, res: Response) => {
 export const handleWhatsappWebhook = async (req: Request, res: Response) => {
   const timestamp = new Date().toISOString().replace("T", " ").slice(0, 19);
   console.log(`\n\nWebhook received ${timestamp}\n`);
-  console.log(req.body)
+  console.log(JSON.stringify(req.body, null, 2));
 
   const message = req.body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
   if (!message) return res.sendStatus(200);
