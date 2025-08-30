@@ -31,6 +31,8 @@ export const handleWhatsappWebhook = async (req: Request, res: Response) => {
   }
   else if (message.type === "image") {
     const mediaId = message.image.id;
+    let caption = message.image?.caption;
+    if (!caption) caption = "Verify the information";
     console.log("Received image with ID:", mediaId);
 
     const meta = await getWhatsappMediaUrl(mediaId);
@@ -40,12 +42,12 @@ export const handleWhatsappWebhook = async (req: Request, res: Response) => {
         const extension = mime.extension(meta.mime_type) || "bin";
         const fileName = `${mediaId}.${extension}`;
 
-        const satyaRes = await runImageCheck(mediaBuffer, fileName, meta.mime_type);
+        const satyaRes = await runImageCheck(mediaBuffer, fileName, meta.mime_type, caption);
         reply = satyaRes.map((item, index) => buildReply(item, index)).join("\n\n");
       }
     }
   }
-  reply = "Test";
+  // reply = "Test";
   await sendWhatsappTextMessage(message.from, reply);
   return res.sendStatus(200);
 };
