@@ -33,3 +33,28 @@ export const sendWhatsappTextMessage = async (to: string, body: string) => {
 
 
 }
+
+export async function getWhatsappMediaUrl(mediaId: string) {
+  try {
+    const { data } = await axios.get(`https://graph.facebook.com/${API_VERSION}/${mediaId}`, {
+      headers: { Authorization: `Bearer ${ACCESS_TOKEN}` }
+    });
+    return data;
+  } catch (error: any) {
+    console.error("Error fetching media metadata:", error.response?.data || error.message);
+    return null;
+  }
+}
+
+export async function downloadWhatsappMedia(mediaUrl: string) {
+  try {
+    const response = await axios.get(mediaUrl, {
+      headers: { Authorization: `Bearer ${ACCESS_TOKEN}` },
+      responseType: "arraybuffer"
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error downloading media:", error.response?.data || error.message);
+    return null;
+  }
+}

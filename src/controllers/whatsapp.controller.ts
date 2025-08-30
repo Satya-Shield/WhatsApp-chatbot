@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { buildReply } from "@/utils/buildReply";
-import { runTextCheck } from "@/services/coreApi.service";
-import { sendWhatsappTextMessage } from "@/services/whatsapp.service";
+import { runImageCheck, runTextCheck } from "@/services/coreApi.service";
+import { downloadWhatsappMedia, getWhatsappMediaUrl, sendWhatsappTextMessage } from "@/services/whatsapp.service";
+import mime from 'mime-types'
 
 const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN!;
 
@@ -24,13 +25,25 @@ export const handleWhatsappWebhook = async (req: Request, res: Response) => {
   let reply = "Sorry, no response available.";
   if (message.type === "text") {
     const satyaRes = await runTextCheck(message.text.body);
-    reply = "";
-    satyaRes.forEach((item, index) => {
-        reply += buildReply(item, index);
-        reply += "\n";
-    })
-  }
+    reply = satyaRes.map((item, index) => buildReply(item, index)).join("\n\n");
 
+  }
+  else if (message.type === "image") {
+    const mediaId = message.image.id;
+    console.log("Received image with ID:", mediaId);
+
+    const meta = await getWhatsappMediaUrl(mediaId);
+    if (meta?.url) {
+      const mediaBuffer = await downloadWhatsappMedia(meta.url);
+      if (mediaBuffer) {
+        const extension = mime.extension(meta.mime_type) || "bin";
+        const fileName = `${mediaId}.${extension}`;
+
+        const satyaRes = await runImageCheck(mediaBuffer, fileName, meta.mime_type);
+        reply = satyaRes.map((item, index) => buildReply(item, index)).join("\n\n");
+      }
+    }
+  }
   await sendWhatsappTextMessage(message.from, reply);
   return res.sendStatus(200);
 };
