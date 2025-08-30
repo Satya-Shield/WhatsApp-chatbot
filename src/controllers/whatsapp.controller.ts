@@ -31,7 +31,7 @@ export const handleWhatsappWebhook = async (req: Request, res: Response) => {
     if (message.type === "text") {
       const satyaRes = await runTextCheck(message.text.body);
       satyaRes.forEach(async (item, index) => {
-        reply = buildReply(item, index);
+        reply = buildReply(item);
         await sendWhatsappTextMessage(message.from, reply);
       })
     } else if (message.type === "image") {
@@ -47,7 +47,7 @@ export const handleWhatsappWebhook = async (req: Request, res: Response) => {
           const fileName = `${mediaId}.${extension}`;
           const satyaRes = await runImageCheck(mediaBuffer, fileName, meta.mime_type, caption);
           satyaRes.forEach(async (item, index) => {
-            reply = buildReply(item, index);
+            reply = buildReply(item);
             await sendWhatsappTextMessage(message.from, reply);
           })
         }

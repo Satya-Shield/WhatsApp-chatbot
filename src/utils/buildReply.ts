@@ -1,9 +1,9 @@
 import { ApiResponse } from "@/types/coreApi.types";
 
-export const buildReply = (result: ApiResponse, index: number): string => {
+export const buildReply = (result: ApiResponse): string => {
   let bodyText: string = "";
 
-  bodyText += `*📌 Claim ${index + 1}:* ${result.claim}\n\n`;
+  bodyText += `*📌 Claim:* ${result.claim}\n\n`;
   bodyText += `*✅ Verdict:* *${result.verdict}*  \n`;
   bodyText += `*📊 Confidence:* ${result.confidence}%\n\n`;
   bodyText += `*📝 Explanation:* ${result.explanation}\n\n`;
