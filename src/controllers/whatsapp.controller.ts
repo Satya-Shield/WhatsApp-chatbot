@@ -30,7 +30,10 @@ export const handleWhatsappWebhook = async (req: Request, res: Response) => {
 
     if (message.type === "text") {
       const satyaRes = await runTextCheck(message.text.body);
-      reply = satyaRes.map((item, index) => buildReply(item, index)).join("\n\n");
+      satyaRes.forEach(async (item, index) => {
+        reply = buildReply(item, index);
+        await sendWhatsappTextMessage(message.from, reply);
+      })
     } else if (message.type === "image") {
       const mediaId = message.image.id;
       let caption = message.image?.caption || "Verify the information";
@@ -43,11 +46,13 @@ export const handleWhatsappWebhook = async (req: Request, res: Response) => {
           const extension = mime.extension(meta.mime_type) || "bin";
           const fileName = `${mediaId}.${extension}`;
           const satyaRes = await runImageCheck(mediaBuffer, fileName, meta.mime_type, caption);
-          reply = satyaRes.map((item, index) => buildReply(item, index)).join("\n\n");
+          satyaRes.forEach(async (item, index) => {
+            reply = buildReply(item, index);
+            await sendWhatsappTextMessage(message.from, reply);
+          })
         }
       }
     }
 
-    await sendWhatsappTextMessage(message.from, reply);
   })();
 };
