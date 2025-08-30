@@ -45,6 +45,7 @@ export const handleWhatsappWebhook = async (req: Request, res: Response) => {
       }
     }
   }
+  reply = "Test";
   await sendWhatsappTextMessage(message.from, reply);
   return res.sendStatus(200);
 };
