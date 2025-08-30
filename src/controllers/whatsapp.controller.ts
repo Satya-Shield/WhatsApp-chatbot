@@ -1,0 +1,36 @@
+import { Request, Response } from "express";
+import { buildReply } from "@/utils/buildReply";
+import { runTextCheck } from "@/services/coreApi.service";
+import { sendWhatsappTextMessage } from "@/services/whatsapp.service";
+
+const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN!;
+
+export const verifyWhatsappWebhook = (req: Request, res: Response) => {
+  const { "hub.mode": mode, "hub.challenge": challenge, "hub.verify_token": token } = req.query;
+  if (mode === "subscribe" && token === verifyToken) {
+    console.log("WEBHOOK VERIFIED");
+    return res.status(200).send(challenge as string);
+  }
+  return res.sendStatus(403);
+};
+
+export const handleWhatsappWebhook = async (req: Request, res: Response) => {
+  const timestamp = new Date().toISOString().replace("T", " ").slice(0, 19);
+  console.log(`\n\nWebhook received ${timestamp}\n`);
+
+  const message = req.body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+  if (!message) return res.sendStatus(200);
+
+  let reply = "Sorry, no response available.";
+  if (message.type === "text") {
+    const satyaRes = await runTextCheck(message.text.body);
+    reply = "";
+    satyaRes.forEach((item, index) => {
+        reply += buildReply(item, index);
+        reply += "\n";
+    })
+  }
+
+  await sendWhatsappTextMessage(message.from, reply);
+  return res.sendStatus(200);
+};
