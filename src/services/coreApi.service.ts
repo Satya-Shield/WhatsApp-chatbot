@@ -8,6 +8,7 @@ export const runTextCheck = async (query: string): Promise<ApiResponse[]> => {
         //     query
         // });
         // return data;
+        const { data } = await axios.get("https://satyashield-backend-60le.onrender.com");
         console.log("-------------Backend API Called!-----------")
         return [];
     } catch (error: any) {
