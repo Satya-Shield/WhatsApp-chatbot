@@ -1,11 +1,14 @@
 <div align="center">
-  <h1 style="font-size: 3.5em; font-weight: 900; line-height: 1.2; margin: 20px 0;">
-    <span style="background: linear-gradient(90deg, #25D366, #128C7E, #075E54); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;">
-      SatyaShield WhatsApp Bot
-    </span>
-  </h1>
+  
+# SatyaShield WhatsApp Bot
+
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+![Platform](https://img.shields.io/badge/Platform-WhatsApp-25D366)
+![Security](https://img.shields.io/badge/Security-Shield-blue)
+
 </div>
 
+</br>
 
 <div align="center">
   
