@@ -95,24 +95,14 @@ graph TD
 
 ---
 
-## 📸 **Screenshots & Demo**
+## 📸 Screenshots & Demo
 
 <div align="center">
 
-### **💬 Chat Interface**
-*Clean, intuitive WhatsApp interaction*
-
-<img src="https://via.placeholder.com/300x500/25D366/FFFFFF?text=WhatsApp+Chat+Demo" alt="WhatsApp Chat Demo" width="300"/>
-
-### **📊 Analysis Results**
-*Comprehensive fact-checking with confidence scores*
-
-<img src="https://via.placeholder.com/300x400/E3F2FD/1565C0?text=Fact+Check+Results" alt="Fact Check Results" width="300"/>
-
-### **🚨 Misinformation Detection**
-*Detailed breakdown of manipulative techniques*
-
-<img src="https://via.placeholder.com/300x400/FFEBEE/D32F2F?text=Misinformation+Alert" alt="Misinformation Alert" width="300"/>
+| 💬 **Chat Interface** | 📊 **Analysis Results** | 🚨 **Misinformation Detection** |
+|:---:|:---:|:---:|
+| *Clean, intuitive WhatsApp interaction* | *Comprehensive fact-checking with confidence scores* | *Detailed breakdown and explanation* |
+| <img src="https://github.com/user-attachments/assets/34d9eb19-8f9c-4264-8df1-1a8b9265c301" width="200" alt="Chat Interface"/> | <img src="https://github.com/user-attachments/assets/e0707d2e-bf9b-4fec-9327-65136a31337c" width="200" alt="Analysis Results"/> | <img src="https://github.com/user-attachments/assets/200b8e93-f704-4dab-8ec5-d8ef55635dfe" width="200" alt="Misinformation Detection"/> |
 
 </div>
 
